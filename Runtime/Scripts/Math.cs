@@ -1,4 +1,4 @@
-namespace Spiratec.IOSEF
+namespace SpiraTec.IOSEF
 { 
     /// <summary>
     /// A placeholder script that has some dummy data to show how documentation is generated
