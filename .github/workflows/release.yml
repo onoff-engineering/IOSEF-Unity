@@ -1,0 +1,136 @@
+name: Release Unity Package
+
+on:  
+  # push:
+  #   branches: [main]
+  workflow_dispatch:
+
+jobs:  
+  build-documentation:
+    runs-on: windows-latest 
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        # with:
+        #   submodules: true
+
+      - name: Install DocFX
+        run: choco install -y docfx
+
+      - name: Use Repo README.md as index.md
+        run: cp README.md Documentation/DocFx/index.md
+
+      - name: Build Documentation
+        run: docfx Documentation/DocFx/docfx.json -t statictoc
+      
+      - name: Upload Documentation Site
+        uses: actions/upload-artifact@v1
+        with:
+          name: _site
+          path: Documentation/DocFx/_site # Must equal the 'build.dest' value on your docfx.json
+  
+  deploy-documentation:   
+    needs: build-documentation
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        # with:
+        #   submodules: true
+      
+      - name: Download site artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: _site
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: _site
+  
+  build-package:    
+    needs: deploy-documentation   
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+      
+      - name: Semantic release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{secrets.GH_TOKEN}} 
+
+      # Recreate the UPM (Release) branch for the latest version
+      - name: Create UPM Branch
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo Checking out UPM Branch
+          git checkout main
+          git config --global user.name ${{github.actor}}
+          git config --global user.email 64234375+Preliy@users.noreply.github.com
+          git checkout -B upm
+
+      # Prep for release, hide Samples/ from Unity's compiler
+      - name: Refactor/Hide Samples Folder
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo Refactoring Samples
+          if [[ -d "Samples" ]]; then
+            git mv Samples Samples~
+            rm -f Samples.meta
+          fi
+
+      # Prep for release, hide Documentation/ from Unity's compiler
+      - name: Refactor/Hide Documentation Folder
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo Refactoring Documentation
+          if [[ -d "Documentation" ]]; then
+            git mv Documentation Documentation~
+            rm -f Documentation.meta
+          fi
+
+      # RIf there's a new version, remove unwanted files from the upm branch
+      - name: Remove CI Files
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo Removing Continuous Integration Files
+          rm -f ".releaserc.json" 
+          rm -rf ".github"
+          rm -f ".gitignore"
+
+      # Push the UPM branch with this release
+      - name: Push UPM Branch
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo Pushing Release to UPM Branch
+          git commit -am "Release v${{steps.semantic.outputs.new_release_version}}"
+          git push -f -u origin upm
+
+      # Tag the UPM branch with this release
+      - name: Tag UPM Branch
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          git tag -f v${{ steps.semantic.outputs.new_release_version }} upm
+          git push -f origin --tags
+
+      # Publish this tagged as a release
+      - name: Publish New Repo Release
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo Creating Repo Release
+          gh release create v${{steps.semantic.outputs.new_release_version}} -t "Release ${{steps.semantic.outputs.new_release_version}}" -F CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
