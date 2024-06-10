@@ -20,8 +20,8 @@
     ],
     "build": {
         "globalMetadata": {
-            "_appTitle": "Template Package",
-            "_appFooter": "Preliy Documentation",
+            "_appTitle": "IOSEF-Unity",
+            "_appFooter": "Documentation",
             "_enableSearch": true
         },
         "content": [
@@ -64,7 +64,7 @@
             }
         ],
         "sitemap": {
-            "baseUrl": "https://preliy.github.io/upm-template",
+            "baseUrl": "https://onoff-engineering.github.io/IOSEF-Unity",
             "changefreq": "weekly",
             "fileOptions": {
                 "api/*": {
