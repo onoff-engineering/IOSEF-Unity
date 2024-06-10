@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/onoff-engineering/IOSEF-Unity/compare/v1.0.0...v1.0.1) (2024-06-10)
+
+
+### Bug Fixes
+
+* Update release.yml ([e73e366](https://github.com/onoff-engineering/IOSEF-Unity/commit/e73e366437420d1b3652c35fa1a2b0617927e4de))
+
 # 1.0.0 (2024-06-10)
 
 
