@@ -2,7 +2,7 @@ name: Release Unity Package
 
 on:  
   # push:
-  #   branches: [main]
+  #   branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
         if: steps.semantic.outputs.new_release_published == 'true'
         run: |
           echo Checking out UPM Branch
-          git checkout main
+          git checkout master
           git config --global user.name ${{github.actor}}
           git config --global user.email 64234375+Preliy@users.noreply.github.com
           git checkout -B upm
