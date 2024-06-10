@@ -1,0 +1,16 @@
+{
+  "name": "com.spiratec.iosef",
+  "displayName": "IOSEF",
+  "version": "0.0.0",
+  "unity": "2022.3",
+  "unityRelease": "30f1",
+  "description": "IOSEF - Industrial Open Source Emulation Framework",
+  "keywords": ["Digital Twin","Simulation","Industrial","Emulation"],
+  "category": "Digital Twin",
+  "changelogUrl": "https://example.com/changelog.html",
+  "author": {
+    "name": "SpiraTec AG",
+    "email": ["michael.kasseckert@spiratec.com", "viktor.gaponenko@spiratec.com", "moritz.langer@spiratec.com"],
+    "url": "https://www.spiratec.com/de/kontakt/"
+  }
+}
