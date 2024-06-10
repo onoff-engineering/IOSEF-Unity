@@ -87,4 +87,4 @@ jobs:
           echo Creating Repo Release
           gh release create v${{steps.semantic.outputs.new_release_version}} -t "Release ${{steps.semantic.outputs.new_release_version}}" -F CHANGELOG.md
         env:
-          GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
