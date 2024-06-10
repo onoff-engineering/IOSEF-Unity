@@ -5,54 +5,8 @@ on:
   #   branches: [main]
   workflow_dispatch:
 
-jobs:  
-  build-documentation:
-    runs-on: windows-latest 
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-        # with:
-        #   submodules: true
-
-      - name: Install DocFX
-        run: choco install -y docfx
-
-      - name: Use Repo README.md as index.md
-        run: cp README.md .documentation/DocFx/index.md
-
-      - name: Build Documentation
-        run: docfx .documentation/DocFx/docfx.json -t statictoc
-      
-      - name: Upload Documentation Site
-        uses: actions/upload-artifact@v1
-        with:
-          name: _site
-          path: .documentation/DocFx/_site # Must equal the 'build.dest' value on your docfx.json
-  
-  deploy-documentation:   
-    needs: build-documentation
-    
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        # with:
-        #   submodules: true
-      
-      - name: Download site artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: _site
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: _site
-  
-  build-package:    
-    needs: deploy-documentation   
+jobs:
+  build-package:
     runs-on: ubuntu-latest
     
     steps:
@@ -70,7 +24,7 @@ jobs:
             @semantic-release/changelog
             @semantic-release/git
         env:
-          GITHUB_TOKEN: ${{secrets.GH_TOKEN}} 
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}} 
 
       # Recreate the UPM (Release) branch for the latest version
       - name: Create UPM Branch
