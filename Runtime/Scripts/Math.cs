@@ -12,7 +12,7 @@ namespace SpiraTec.IOSEF
     
         public static float Minus(float a, float b)
         {
-            return a - b;
+            return a - b; //fix 1
         }
     }
 }
