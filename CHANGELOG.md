@@ -1,3 +1,13 @@
+## [1.0.1](https://github.com/onoff-engineering/IOSEF-Unity/compare/v1.0.0...v1.0.1) (2024-06-11)
+
+
+### Bug Fixes
+
+* Update Math.cs ([9653210](https://github.com/onoff-engineering/IOSEF-Unity/commit/96532108522b3b0b6a43378ea55be5d963c1401c))
+* Update release.yml ([a782b71](https://github.com/onoff-engineering/IOSEF-Unity/commit/a782b71ef4beca2d632dd99d1553606549445121))
+* Update release.yml ([e73e366](https://github.com/onoff-engineering/IOSEF-Unity/commit/e73e366437420d1b3652c35fa1a2b0617927e4de))
+* workflows ([37d9804](https://github.com/onoff-engineering/IOSEF-Unity/commit/37d98048c900b8faa5fe1b5a2295acecbb03f58b))
+
 ## [1.0.1](https://github.com/onoff-engineering/IOSEF-Unity/compare/v1.0.0...v1.0.1) (2024-06-10)
 
 
